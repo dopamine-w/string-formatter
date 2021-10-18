@@ -17,10 +17,10 @@ class format:
         formatted_str = ""
 
         while self.cur_char != None:
-            if self.cur_char != "%":
+            if self.cur_char not in "%{":
                 formatted_str += self.cur_char
                 self.advance()
-            else:
+            elif self.cur_char == "%":
                 self.advance()
                 
                 if self.cur_char == "s":
@@ -55,5 +55,15 @@ class format:
                             self.advance()
                 else:
                     raise Exception("Unrecognized type")
+            
+            elif self.cur_char == "{":
+                self.advance()
+
+                if self.cur_char != "}":
+                    raise Exception("Failed to format string")
+                else:
+                    formatted_str += self.values[cur_val]
+                    cur_val += 1
+                    self.advance()
     
         self.text = formatted_str
